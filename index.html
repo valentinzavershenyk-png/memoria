@@ -1,39 +1,127 @@
-<!doctype html><html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Пам'ять Героїв села Суховерхів</title><style>
-body{margin:0;background:#14171c;color:#f1ead8;font-family:Georgia,serif}
-header{text-align:center;padding:40px 16px 10px}h1{margin:0;font-size:2.2rem;color:#e8c766}
-header p{opacity:.8}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;padding:24px;max-width:1200px;margin:auto}
-.tile{position:relative;cursor:pointer;border-radius:10px;overflow:hidden;aspect-ratio:3/4;background:#222;border:1px solid #3a3424}
-.tile img,.tile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.tile video{opacity:0;transition:opacity .3s}
-.tile:hover video{opacity:1}.cap{position:absolute;left:0;right:0;bottom:0;padding:12px;background:linear-gradient(transparent,#000c)}
-.cap b{display:block}.cap small{opacity:.8}
-#m{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:16px}
-#m.on{display:flex}.box{background:#1d2128;max-width:760px;width:100%;border-radius:12px;display:flex;gap:20px;padding:20px;flex-wrap:wrap;max-height:90vh;overflow:auto}
-.box img{width:240px;max-width:100%;border-radius:8px}.info{flex:1;min-width:240px}.info h2{color:#e8c766;margin-top:0}
-button{background:#e8c766;color:#14171c;border:0;border-radius:6px;padding:10px 14px;font-size:1rem;cursor:pointer;margin:4px 4px 0 0}
-button.g{background:#333;color:#f1ead8}.flame{font-size:1.6rem}
-#mus{position:fixed;left:14px;bottom:14px}</style></head><body>
-<header><h1>Пам'ять Героїв села Суховерхів</h1><p>Вічна пам'ять і слава Героям України</p></header>
-<div class="grid" id="g"></div>
-<div id="m"><div class="box"><img id="mi"><div class="info"><h2 id="mn"></h2><p id="mr"></p><p id="my"></p><p id="ms"></p>
-<button id="play">▶ Слухати історію</button><button id="cand">🕯 Запалити свічку</button><button class="g" id="cl">Закрити</button>
-<p><span class="flame" id="cf"></span> <span id="cc"></span></p></div></div></div>
-<button class="g" id="mus">🔊 Музика</button>
-<audio id="bg" src="music.mp3" loop></audio><audio id="vo"></audio>
-<script>
-const H=[{"id":"darii","name":"Дарій Дмитро Кузьмович","years":"25.10.1971 – 28.10.2018","rank":"Солдат","village":"с. Суховерхів","story":"Дмитро Кузьмович Дарій — справжній патріот, який став на захист України в найскладніші часи. Його мужність та відданість своїй землі навічно залишаться в пам'яті нашого народу."},{"id":"nezviskyi","name":"Незвиський Микола Васильович","years":"18.12.1979 – 19.12.2024","rank":"Сержант","village":"с. Суховерхів","story":"Незвиський Микола Васильович — захисник України, сержант Збройних Сил України, житель села Суховерхів. Народився 18 грудня 1979 року. Загинув 19 грудня 2024 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"melnychuk","name":"Мельничук Мирослав Михайлович","years":"25.08.1992 – 29.09.2025","rank":"","village":"с. Суховерхів","story":"Мельничук Мирослав Михайлович — захисник України, житель села Суховерхів. Народився 25 серпня 1992 року. Загинув 29 вересня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"heshko","name":"Гешко Михайло Іванович","years":"21.11.1995 – 14.02.2026","rank":"","village":"с. Суховерхів","story":"Гешко Михайло Іванович — захисник України, житель села Суховерхів. Народився 21 листопада 1995 року. Загинув 14 лютого 2026 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"pidhoretskyi","name":"Підгорецький Михайло Вікторович","years":"05.03.1985 – 27.01.2025","rank":"Солдат","village":"с. Суховерхів","story":"Підгорецький Михайло Вікторович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 5 березня 1985 року. Загинув 27 січня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"sukhar","name":"Сухарь Григорій Васильович","years":"09.02.1980 – 10.04.2023","rank":"Солдат","village":"с. Суховерхів","story":"Сухарь Григорій Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 9 лютого 1980 року. Загинув 10 квітня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"larionov","name":"Ларіонов Олександр Васильович","years":"28.02.1984 – 29.08.2023","rank":"Старший сержант, командир відділення","village":"с. Суховерхів","story":"Ларіонов Олександр Васильович — захисник України, старший сержант, командир відділення Збройних Сил України, житель села Суховерхів. Народився 28 лютого 1984 року. Загинув 29 серпня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"romanko","name":"Романко Роман Васильович","years":"28.01.1975 – 17.04.2025","rank":"Солдат","village":"с. Суховерхів","story":"Романко Роман Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 28 січня 1975 року. Загинув 17 квітня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"unhurian","name":"Унгурян Олександр Васильович","years":"09.08.1987 – 22.03.2023","rank":"Старший солдат","village":"с. Суховерхів","story":"Унгурян Олександр Васильович — захисник України, старший солдат Збройних Сил України, житель села Суховерхів. Народився 9 серпня 1987 року. Загинув 22 березня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"}];const g=document.getElementById('g'),bg=document.getElementById('bg'),vo=document.getElementById('vo');bg.volume=.3;
-let musicOn=true,started=false,cur=null;
-function startMusic(){if(!started&&musicOn){bg.play().catch(()=>{});started=true}}
-document.addEventListener('pointerdown',startMusic,{once:false});bg.play().then(()=>started=true).catch(()=>{});
-H.forEach(h=>{const t=document.createElement('div');t.className='tile'; t.innerHTML=`<img src="${h.id}.jpg" alt="${h.name}"><video src="${h.id}-wave.webm" muted loop playsinline preload="auto"></video><div class="cap"><b>${h.name}</b><small>${h.years}</small></div>`; const v=t.querySelector('video');t.onmouseenter=()=>{v.currentTime=0;v.play().catch(()=>{})};t.onmouseleave=()=>v.pause();t.onclick=()=>open_(h);g.appendChild(t)});
-const v=t.querySelector('video');t.onmouseenter=()=>{v.currentTime=0;v.play().catch(()=>{})};t.onmouseleave=()=>v.pause();t.onclick=()=>open_(h);g.appendChild(t)});
-const K=id=>'candle-'+id;
-function upd(){const n=localStorage.getItem(K(cur.id))?1:0;document.getElementById('cf').textContent=n?'🕯':'';
-document.getElementById('cc').textContent='Запалено свічок на цьому пристрої: '+n;document.getElementById('cand').disabled=!!n;
-document.getElementById('cand').textContent=n?'🕯 Свічку запалено':'🕯 Запалити свічку'}
-function speak(){vo.src=cur.id+'-voice.mp3';vo.play().catch(()=>{})}
-function open_(h){cur=h;startMusic();mi.src=h.id+'.jpg';mn.textContent=h.name;mr.textContent=h.rank?('Звання: '+h.rank):'';
-my.textContent=h.years+' · '+h.village;ms.textContent=h.story;m.classList.add('on');upd();speak()}
-play.onclick=speak;cand.onclick=()=>{try{localStorage.setItem(K(cur.id),'1')}catch(e){}upd()};
-function close_(){vo.pause();m.classList.remove('on')}cl.onclick=close_;m.onclick=e=>{if(e.target===m)close_()};
-</script></body></html>
+```html
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Пам'ять Героїв села Суховерхів</title>
+    <style>
+        body{margin:0;background:#14171c;color:#f1ead8;font-family:Georgia,serif}
+        header{text-align:center;padding:40px 16px 10px}
+        h1{margin:0;font-size:2.2rem;color:#e8c766}
+        header p{opacity:.8}
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;padding:24px;max-width:1200px;margin:auto}
+        .tile{position:relative;cursor:pointer;border-radius:10px;overflow:hidden;aspect-ratio:3/4;background:#222;border:1px solid #3a3424}
+        .tile img,.tile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .tile video{opacity:0;transition:opacity .3s}
+        .tile:hover video{opacity:1}
+        .cap{position:absolute;left:0;right:0;bottom:0;padding:12px;background:linear-gradient(transparent,#000c)}
+        .cap b{display:block}
+        .cap small{opacity:.8}
+        #m{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:16px}
+        #m.on{display:flex}
+        .box{background:#1d2128;max-width:760px;width:100%;border-radius:12px;display:flex;gap:20px;padding:20px;flex-wrap:wrap;max-height:90vh;overflow:auto}
+        .box img{width:240px;max-width:100%;border-radius:8px}
+        .info{flex:1;min-width:240px}
+        .info h2{color:#e8c766;margin-top:0}
+        button{background:#e8c766;color:#14171c;border:0;border-radius:6px;padding:10px 14px;font-size:1rem;cursor:pointer;margin:4px 4px 0 0}
+        button.g{background:#333;color:#f1ead8}
+        .flame{font-size:1.6rem}
+        #mus{position:fixed;left:14px;bottom:14px}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Пам'ять Героїв села Суховерхів</h1>
+        <p>Вічна пам'ять і слава Героям України</p>
+    </header>
+    <div class="grid" id="g"></div>
+    <div id="m">
+        <div class="box">
+            <img id="mi">
+            <div class="info">
+                <h2 id="mn"></h2>
+                <p id="mr"></p>
+                <p id="my"></p>
+                <p id="ms"></p>
+                <button id="play">▶ Слухати історію</button>
+                <button id="cand">🕯 Запалити свічку</button>
+                <button class="g" id="cl">Закрити</button>
+                <p><span class="flame" id="cf"></span> <span id="cc"></span></p>
+            </div>
+        </div>
+    </div>
+    <button class="g" id="mus">🔊 Музика</button>
+    <audio id="bg" src="music.mp3" loop></audio>
+    <audio id="vo"></audio>
+
+    <script>
+        const H = [{"id":"darii","name":"Дарій Дмитро Кузьмович","years":"25.10.1971 – 28.10.2018","rank":"Солдат","village":"с. Суховерхів","story":"Дмитро Кузьмович Дарій — справжній патріот, який став на захист України в найскладніші часи. Його мужність та відданість своїй землі навічно залишаться в пам'яті нашого народу."},{"id":"nezviskyi","name":"Незвиський Микола Васильович","years":"18.12.1979 – 19.12.2024","rank":"Сержант","village":"с. Суховерхів","story":"Незвиський Микола Васильович — захисник України, сержант Збройних Сил України, житель села Суховерхів. Народився 18 грудня 1979 року. Загинув 19 грудня 2024 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"melnychuk","name":"Мельничук Мирослав Михайлович","years":"25.08.1992 – 29.09.2025","rank":"","village":"с. Суховерхів","story":"Мельничук Мирослав Михайлович — захисник України, житель села Суховерхів. Народився 25 серпня 1992 року. Загинув 29 вересня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"heshko","name":"Гешко Михайло Іванович","years":"21.11.1995 – 14.02.2026","rank":"","village":"с. Суховерхів","story":"Гешко Михайло Іванович — захисник України, житель села Суховерхів. Народився 21 листопада 1995 року. Загинув 14 лютого 2026 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"pidhoretskyi","name":"Підгорецький Михайло Вікторович","years":"05.03.1985 – 27.01.2025","rank":"Солдат","village":"с. Суховерхів","story":"Підгорецький Михайло Вікторович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 5 березня 1985 року. Загинув 27 січня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"sukhar","name":"Сухарь Григорій Васильович","years":"09.02.1980 – 10.04.2023","rank":"Солдат","village":"с. Суховерхів","story":"Сухарь Григорій Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 9 лютого 1980 року. Загинув 10 квітня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"larionov","name":"Ларіонов Олександр Васильович","years":"28.02.1984 – 29.08.2023","rank":"Старший сержант, командир відділення","village":"с. Суховерхів","story":"Ларіонов Олександр Васильович — захисник України, старший сержант, командир відділення Збройних Сил України, житель села Суховерхів. Народився 28 лютого 1984 року. Загинув 29 серпня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"romanko","name":"Романко Роман Васильович","years":"28.01.1975 – 17.04.2025","rank":"Солдат","village":"с. Суховерхів","story":"Романко Роман Васильович — захисників України, солдат Збройних Сил України, житель села Суховерхів. Народився 28 січня 1975 року. Загинув 17 квітня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},{"id":"unhurian","name":"Унгурян Олександр Васильович","years":"09.08.1987 – 22.03.2023","rank":"Старший солдат","village":"с. Суховерхів","story":"Унгурян Олександр Васильович — захисник України, старший солдат Збройних Сил України, житель села Суховерхів. Народився 9 серпня 1987 року. Загинув 22 березня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"}];
+
+        const g = document.getElementById('g'), bg = document.getElementById('bg'), vo = document.getElementById('vo');
+        bg.volume = .3;
+        let musicOn = true, started = false, cur = null;
+
+        function startMusic() {
+            if (!started && musicOn) {
+                bg.play().catch(() => {});
+                started = true;
+            }
+        }
+
+        document.addEventListener('pointerdown', startMusic, {once: false});
+        bg.play().then(() => started = true).catch(() => {});
+
+        H.forEach(h => {
+            const t = document.createElement('div');
+            t.className = 'tile';
+            t.innerHTML = `<img src="${h.id}.jpg" alt="${h.name}"><video src="${h.id}-wave.webm" muted loop playsinline preload="auto"></video><div class="cap"><b>${h.name}</b><small>${h.years}</small></div>`;
+            const v = t.querySelector('video');
+            t.onmouseenter = () => { v.currentTime = 0; v.play().catch(() => {}); };
+            t.onmouseleave = () => v.pause();
+            t.onclick = () => open_(h);
+            g.appendChild(t);
+        });
+
+        const K = id => 'candle-' + id;
+
+        function upd() {
+            const n = localStorage.getItem(K(cur.id)) ? 1 : 0;
+            document.getElementById('cf').textContent = n ? '🕯' : '';
+            document.getElementById('cc').textContent = 'Запалено свічок на цьому пристрої: ' + n;
+            document.getElementById('cand').disabled = !!n;
+            document.getElementById('cand').textContent = n ? '🕯 Свічку запалено' : '🕯 Запалити свічку';
+        }
+
+        function speak() {
+            vo.src = cur.id + '-voice.mp3';
+            vo.play().catch(() => {});
+        }
+
+        function open_(h) {
+            cur = h;
+            startMusic();
+            mi.src = h.id + '.jpg';
+            mn.textContent = h.name;
+            mr.textContent = h.rank ? ('Звання: ' + h.rank) : '';
+            my.textContent = h.years + ' · ' + h.village;
+            ms.textContent = h.story;
+            m.classList.add('on');
+            upd();
+            speak();
+        }
+
+        play.onclick = speak;
+        cand.onclick = () => { try { localStorage.setItem(K(cur.id), '1'); } catch (e) {} upd(); };
+
+        function close_() {
+            vo.pause();
+            m.classList.remove('on');
+        }
+
+        cl.onclick = close_;
+        m.onclick = e => { if (e.target === m) close_(); };
+    </script>
+</body>
+</html>
+```
