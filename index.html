@@ -33,8 +33,8 @@ const K=id=>'candle-'+id;
 function upd(){const n=localStorage.getItem(K(cur.id))?1:0;document.getElementById('cf').textContent=n?'🕯':'';
 document.getElementById('cc').textContent='Запалено свічок на цьому пристрої: '+n;document.getElementById('cand').disabled=!!n;
 document.getElementById('cand').textContent=n?'🕯 Свічку запалено':'🕯 Запалити свічку'}
-function speak(){vo.src='media/'+cur.id+'-voice.mp3';vo.play().catch(()=>{})}
-function open_(h){cur=h;startMusic();mi.src='media/'+h.id+'.jpg';mn.textContent=h.name;mr.textContent=h.rank?('Звання: '+h.rank):'';
+function speak(){vo.src=cur.id+'-voice.mp3';vo.play().catch(()=>{})}
+function open_(h){cur=h;startMusic();mi.src=h.id+'.jpg';mn.textContent=h.name;mr.textContent=h.rank?('Звання: '+h.rank):'';
 my.textContent=h.years+' · '+h.village;ms.textContent=h.story;m.classList.add('on');upd();speak()}
 play.onclick=speak;cand.onclick=()=>{try{localStorage.setItem(K(cur.id),'1')}catch(e){}upd()};
 function close_(){vo.pause();m.classList.remove('on')}cl.onclick=close_;m.onclick=e=>{if(e.target===m)close_()};
