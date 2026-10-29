@@ -25,11 +25,7 @@ const H=[{"id":"darii","name":"Дарій Дмитро Кузьмович","year
 let musicOn=true,started=false,cur=null;
 function startMusic(){if(!started&&musicOn){bg.play().catch(()=>{});started=true}}
 document.addEventListener('pointerdown',startMusic,{once:false});bg.play().then(()=>started=true).catch(()=>{});
-`t.innerHTML = `<img src="${h.id}.jpg" alt="${h.name}"><video src="${h.id}-wave.webm" muted loop playsinline preload="auto"></video><div class="cap"><b>${h.name}</b><small>${h.years}</small></div>`;`
-H.forEach(h=>{const t=document.createElement('div');t.className='tile';
-```javascript
 H.forEach(h=>{const t=document.createElement('div');t.className='tile'; t.innerHTML=`<img src="${h.id}.jpg" alt="${h.name}"><video src="${h.id}-wave.webm" muted loop playsinline preload="auto"></video><div class="cap"><b>${h.name}</b><small>${h.years}</small></div>`; const v=t.querySelector('video');t.onmouseenter=()=>{v.currentTime=0;v.play().catch(()=>{})};t.onmouseleave=()=>v.pause();t.onclick=()=>open_(h);g.appendChild(t)});
-```
 const v=t.querySelector('video');t.onmouseenter=()=>{v.currentTime=0;v.play().catch(()=>{})};t.onmouseleave=()=>v.pause();t.onclick=()=>open_(h);g.appendChild(t)});
 const K=id=>'candle-'+id;
 function upd(){const n=localStorage.getItem(K(cur.id))?1:0;document.getElementById('cf').textContent=n?'🕯':'';
