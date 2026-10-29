@@ -110,7 +110,18 @@
             speak();
         }
 
+        javascript
         play.onclick = speak;
+        mus.onclick = () => {
+            if (musicOn) {
+                bg.pause();
+                mus.textContent = '🔇 Музика';
+            } else {
+                bg.play().catch(() => {});
+                mus.textContent = '🔊 Музика';
+            }
+            musicOn = !musicOn;
+        };
         cand.onclick = () => { try { localStorage.setItem(K(cur.id), '1'); } catch (e) {} upd(); };
 
         function close_() {
