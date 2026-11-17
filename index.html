@@ -1,4 +1,4 @@
-``html
+```html
 <!doctype html>
 <html lang="uk">
 <head>
@@ -58,7 +58,7 @@
     </div>
 
     <button class="g" id="mus">🔊 Музика</button>
-    <audio id="bg" src="media/music.mp3" loop></audio>
+    <audio id="bg" src="music.mp3" loop></audio>
     <audio id="vo"></audio>
 
     <script>
@@ -114,7 +114,7 @@
         H.forEach(h => {
             const t = document.createElement('div');
             t.className = 'tile';
-            t.innerHTML = `<img src="media/${h.id}.jpg" alt="${h.name}"><video src="media/${h.id}-wave.webm" muted loop playsinline preload="auto"></video><div class="cap"><b>${h.name}</b><small>${h.years}</small></div>`;
+            t.innerHTML = `<img src="${h.id}.jpg" alt="${h.name}"><video src="${h.id}-wave.webm" muted loop playsinline preload="auto"></video><div class="cap"><b>${h.name}</b><small>${h.years}</small></div>`;
             
             const v = t.querySelector('video');
 
@@ -145,7 +145,7 @@
 
         function open_(h) {
             cur = h;
-            document.getElementById('mi').src = `media/${h.id}.jpg`;
+            document.getElementById('mi').src = `${h.id}.jpg`;
             document.getElementById('mn').textContent = h.name;
             document.getElementById('mr').textContent = `${h.rank}, ${h.village}`;
             document.getElementById('my').textContent = h.years;
@@ -166,7 +166,7 @@
         };
 
         function speak() {
-            vo.src = 'media/' + cur.id + '-voice.mp3';
+            vo.src = cur.id + '-voice.mp3';
             vo.play().catch(() => {});
         }
     </script>
