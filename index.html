@@ -62,6 +62,24 @@
         #cl:hover { color: var(--text); }
         @media (max-width: 768px) { .box { flex-direction: column; align-items: center; } .box-img-area { width: 100%; max-width: 300px; } }
     </style>
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
+            authDomain: "memoria-1341b.firebaseapp.com",
+            projectId: "memoria-1341b",
+            storageBucket: "memoria-1341b.firebasestorage.app",
+            messagingSenderId: "349496829155",
+            appId: "1:349496829155:web:1e3fa4a8bb531acaa811d6",
+            measurementId: "G-E5X9XE44QV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        export const db = getFirestore(app);
+    </script>
 </head>
 <body>
     <div class="wrap">
@@ -104,21 +122,8 @@
 
     <!-- Головний Скрипт -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
-            authDomain: "memoria-1341b.firebaseapp.com",
-            projectId: "memoria-1341b",
-            storageBucket: "memoria-1341b.firebasestorage.app",
-            messagingSenderId: "349496829155",
-            appId: "1:349496829155:web:1e3fa4a8bb531acaa811d6",
-            measurementId: "G-E5X9XE44QV"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        import { db } from './index.html';
+        import { doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const H = [
             {"id":"darii","name":"Дарій Дмитро Кузьмович","years":"25.10.1971 – 28.10.2018","rank":"Солдат","story":"Дмитро Кузьмович Дарій — справжній патріот, який став на захист України в найскладніші часи. Його мужність та відданість своїй землі навічно залишаться в пам'яті нашого народу."},
@@ -148,7 +153,7 @@
             tile.innerHTML = `
                 <div class="img-container">
                     <img src="${h.id}.jpg" alt="${h.name}">
-                    <video loop muted playsinline>
+                    <video muted playsinline>
                         <source src="${h.id}-wave.webm" type="video/webm">
                     </video>
                 </div>
@@ -159,8 +164,8 @@
             `;
 
             const video = tile.querySelector('video');
-            video.loop = false;
 
+            // Play animation once when tile enters viewport
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
@@ -170,11 +175,7 @@
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        video.currentTime = 0;
                         video.play();
-                    } else {
-                        video.pause();
-                        video.currentTime = 0;
                     }
                 });
             }, observerOptions);
@@ -255,7 +256,7 @@
                 const closeModal = () => {
                     unsubscribe();
                     heroAudio.pause();
-                    bgMusic.volume = 1.0;
+                    bgMusic.volume.volume = 1.0;
                     modal.classList.remove('on');
                 };
 
@@ -266,6 +267,7 @@
             grid.appendChild(tile);
         });
 
+        // Autoplay music on user click
         const startMusic = () => {
             bgMusic.play().catch(e => console.log("Музику заблоковано браузером до взаємодії"));
             document.removeEventListener('click', startMusic);
