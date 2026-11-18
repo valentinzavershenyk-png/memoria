@@ -62,24 +62,6 @@
         #cl:hover { color: var(--text); }
         @media (max-width: 768px) { .box { flex-direction: column; align-items: center; } .box-img-area { width: 100%; max-width: 300px; } }
     </style>
-    <!-- Firebase SDK Scripts -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
-            authDomain: "memoria-1341b.firebaseapp.com",
-            projectId: "memoria-1341b",
-            storageBucket: "memoria-1341b.firebasestorage.app",
-            messagingSenderId: "349496829155",
-            appId: "1:349496829155:web:1e3fa4a8bb531acaa811d6",
-            measurementId: "G-E5X9XE44QV"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        export const db = getFirestore(app);
-    </script>
 </head>
 <body>
     <div class="wrap">
@@ -120,10 +102,23 @@
     <!-- Фонова музика -->
     <audio id="bg-music" loop src="music.mp3"></audio>
 
-    <!-- Головний Скрипт -->
+    <!-- Підключення Firebase та Скриптів -->
     <script type="module">
-        import { db } from './index.html';
-        import { doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
+            authDomain: "memoria-1341b.firebaseapp.com",
+            projectId: "memoria-1341b",
+            storageBucket: "memoria-1341b.firebasestorage.app",
+            messagingSenderId: "349496829155",
+            appId: "1:349496829155:web:1e3fa4a8bb531acaa811d6",
+            measurementId: "G-E5X9XE44QV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         const H = [
             {"id":"darii","name":"Дарій Дмитро Кузьмович","years":"25.10.1971 – 28.10.2018","rank":"Солдат","story":"Дмитро Кузьмович Дарій — справжній патріот, який став на захист України в найскладніші часи. Його мужність та відданість своїй землі навічно залишаться в пам'яті нашого народу."},
@@ -165,6 +160,7 @@
 
             const video = tile.querySelector('video');
 
+            // Autoplay animation on scroll using Intersection Observer
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
@@ -175,11 +171,9 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         video.play();
-                        video.style.opacity = '1';
                     } else {
                         video.pause();
                         video.currentTime = 0;
-                        video.style.opacity = '0';
                     }
                 });
             }, observerOptions);
@@ -272,7 +266,7 @@
         });
 
         const startMusic = () => {
-            bgMusic.play().catch(e => console.log("Музику заблоковано браузером до взаємодії"));
+            bgMusic.play().catch(e => console.log("Музику заблоковано до першого кліку"));
             document.removeEventListener('click', startMusic);
         };
         document.addEventListener('click', startMusic);
