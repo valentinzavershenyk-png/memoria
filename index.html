@@ -62,24 +62,6 @@
         #cl:hover { color: var(--text); }
         @media (max-width: 768px) { .box { flex-direction: column; align-items: center; } .box-img-area { width: 100%; max-width: 300px; } }
     </style>
-    <!-- Firebase SDK Scripts -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
-            authDomain: "memoria-1341b.firebaseapp.com",
-            projectId: "memoria-1341b",
-            storageBucket: "memoria-1341b.firebasestorage.app",
-            messagingSenderId: "349496829155",
-            appId: "1:349496829155:web:1e3fa4a8bb531acaa811d6",
-            measurementId: "G-E5X9XE44QV"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        export const db = getFirestore(app);
-    </script>
 </head>
 <body>
     <div class="wrap">
@@ -122,15 +104,28 @@
 
     <!-- Головний Скрипт -->
     <script type="module">
-        import { db } from './index.html';
-        import { doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
+            authDomain: "memoria-1341b.firebaseapp.com",
+            projectId: "memoria-1341b",
+            storageBucket: "memoria-1341b.firebasestorage.app",
+            messagingSenderId: "349496829155",
+            appId: "1:349496829155:web:1e3fa4a8bb531acaa811d6",
+            measurementId: "G-E5X9XE44QV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         const H = [
             {"id":"darii","name":"Дарій Дмитро Кузьмович","years":"25.10.1971 – 28.10.2018","rank":"Солдат","story":"Дмитро Кузьмович Дарій — справжній патріот, який став на захист України в найскладніші часи. Його мужність та відданість своїй землі навічно залишаться в пам'яті нашого народу."},
             {"id":"rachmaiev","name":"Рахмаєв Юрій Олексійович","years":"","rank":"","story":"Інформація про Героя оновлюється."},
             {"id":"unhurian","name":"Унгурян Олександр Васильович","years":"09.08.1987 – 22.03.2023","rank":"Старший солдат","story":"Унгурян Олександр Васильович — захисник України, старший солдат Збройних Сил України, житель села Суховерхів. Народився 9 серпня 1987 року. Загинув 22 березня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
             {"id":"larionov","name":"Ларіонов Олександр Васильович","years":"28.02.1984 – 29.08.2023","rank":"Старший сержант, командир відділення","story":"Ларіонов Олександр Васильович — захисник України, старший сержант, командир відділення Збройних Сил України, житель села Суховерхів. Народився 28 лютого 1984 року. Загинув 29 серпня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id":"pidhoretskyi","name":"Підгорецький Михайло Вікторович","years":"05.03.1985 – 27.01.2025","rank":"Солдат","story":"Підгорецький Михайло Вікторович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 5 березня 1985 року. Загинув 27 січня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
+            {"id":"pidhoretskyi","name":"Підгорецький Михайло Віكتورвович","years":"05.03.1985 – 27.01.2025","rank":"Солдат","story":"Підгорецький Михайло Вікторвович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 5 березня 1985 року. Загинув 27 січня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
             {"id":"romanko","name":"Романко Роман Васильович","years":"28.01.1975 – 17.04.2025","rank":"Солдат","story":"Романко Роман Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 28 січня 1975 року. Загинув 17 квітня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
             {"id":"melnychuk","name":"Мельничук Мирослав Михайлович","years":"25.08.1992 – 29.09.2025","rank":"","story":"Мельничук Мирослав Михайлович — захисник України, житель села Суховерхів. Народився 25 серпня 1992 року. Загинув 29 вересня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
             {"id":"sukhar","name":"Сухарь Григорій Васильович","years":"09.02.1980 – 10.04.2023","rank":"Солдат","story":"Сухарь Григорій Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 9 лютого 1980 року. Загинув 10 квітня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
@@ -153,7 +148,7 @@
             tile.innerHTML = `
                 <div class="img-container">
                     <img src="${h.id}.jpg" alt="${h.name}">
-                    <video muted playsinline>
+                    <video loop muted playsinline>
                         <source src="${h.id}-wave.webm" type="video/webm">
                     </video>
                 </div>
@@ -165,22 +160,10 @@
 
             const video = tile.querySelector('video');
 
-            // Play animation once when tile enters viewport
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.5
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        video.play();
-                    }
-                });
-            }, observerOptions);
-
-            observer.observe(tile);
+            // Play animation when tile is hovered/tapped on mobile without loop
+            tile.onmouseenter = () => { video.play(); };
+            tile.onmouseleave = () => { video.pause(); video.currentTime = 0; };
+            tile.ontouchstart = () => { video.play(); setTimeout(() => { video.pause(); video.currentTime = 0; }, 3000); };
 
             tile.onclick = () => {
                 bgMusic.volume = 0.2;
@@ -256,7 +239,7 @@
                 const closeModal = () => {
                     unsubscribe();
                     heroAudio.pause();
-                    bgMusic.volume.volume = 1.0;
+                    bgMusic.volume = 1.0;
                     modal.classList.remove('on');
                 };
 
