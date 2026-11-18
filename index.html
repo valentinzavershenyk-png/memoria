@@ -65,7 +65,7 @@
     <!-- Firebase SDK Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
@@ -122,7 +122,7 @@
 
     <!-- Головний Скрипт -->
     <script type="module">
-        import { db } from './index.html'; // Adjust path if needed or keep inline
+        import { db } from './index.html'; 
         import { doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const H = [
@@ -131,7 +131,7 @@
             {"id":"unhurian","name":"Унгурян Олександр Васильович","years":"09.08.1987 – 22.03.2023","rank":"Старший солдат","story":"Унгурян Олександр Васильович — захисник України, старший солдат Збройних Сил України, житель села Суховерхів. Народився 9 серпня 1987 року. Загинув 22 березня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
             {"id":"larionov","name":"Ларіонов Олександр Васильович","years":"28.02.1984 – 29.08.2023","rank":"Старший сержант, командир відділення","story":"Ларіонов Олександр Васильович — захисник України, старший сержант, командир відділення Збройних Сил України, житель села Суховерхів. Народився 28 лютого 1984 року. Загинув 29 серпня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
             {"id":"pidhoretskyi","name":"Підгорецький Михайло Вікторович","years":"05.03.1985 – 27.01.2025","rank":"Солдат","story":"Підгорецький Михайло Вікторович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 5 березня 1985 року. Загинув 27 січня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id":"romanko","name":"Романко Роман Васильович","years":"28.01.1975 – 17.04.2025","rank":"Солдат","story":"Романко Роман Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 28 січня 1975 року. Загинув 17 квітня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
+            {"id":"romanko","name":"Романко Роман Васильович","years":"28.01.1975 – 17.04.2025","rank":"Солдат","story":"Романко Роман Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Naродився 28 січня 1975 року. Загинув 17 квітня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
             {"id":"melnychuk","name":"Мельничук Мирослав Михайлович","years":"25.08.1992 – 29.09.2025","rank":"","story":"Мельничук Мирослав Михайлович — захисник України, житель села Суховерхів. Народився 25 серпня 1992 року. Загинув 29 вересня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
             {"id":"sukhar","name":"Сухарь Григорій Васильович","years":"09.02.1980 – 10.04.2023","rank":"Солдат","story":"Сухарь Григорій Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 9 лютого 1980 року. Загинув 10 квітня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
             {"id":"heshko","name":"Гешко Михайло Іванович","years":"21.11.1995 – 14.02.2026","rank":"","story":"Гешко Михайло Іванович — захисник України, житель села Суховерхів. Народився 21 листопада 1995 року. Загинув 14 лютого 2026 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
@@ -164,8 +164,8 @@
             `;
 
             const video = tile.querySelector('video');
+            video.loop = false; // Грати лише один раз
 
-            // Autoplay once when tile enters viewport using Intersection Observer
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
@@ -175,6 +175,7 @@
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
+                        video.currentTime = 0;
                         video.play();
                     } else {
                         video.pause();
@@ -270,9 +271,8 @@
             grid.appendChild(tile);
         });
 
-        // Autoplay music on first user click
         const startMusic = () => {
-            bgMusic.play().catch(e => console.log("Музику заблоковано браузером до взаємодії"));
+            bgMusic.play().catch(e => console.log("Музику заблоковано до першого кліку"));
             document.removeEventListener('click', startMusic);
         };
         document.addEventListener('click', startMusic);
