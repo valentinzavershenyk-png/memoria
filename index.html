@@ -65,7 +65,7 @@
     <!-- Firebase SDK Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
@@ -78,7 +78,52 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        export const db = getFirestore(app);
+    </script>
+</head>
+<body>
+    <div class="wrap">
+        <header class="bar">
+            <a href="index.html" class="logo">Memoria</a>
+            <button class="menu" id="menu-btn" aria-label="Меню">☰</button>
+            <nav id="nav-menu">
+                <a href="wwi.html">Перша світова війна</a>
+                <a href="wwii.html">Друга світова війна</a>
+                <a href="index.html">Герої сучасності</a>
+            </nav>
+        </header>
+        
+        <main class="hero">
+            <div class="hero-header">
+                <h1>Герої сучасності</h1>
+                <div class="symbol-box">
+                    <svg class="candle-svg" viewBox="0 0 30 50">
+                        <rect x="12" y="20" width="6" height="25" fill="#555" rx="3"/>
+                        <path class="flame" d="M15 18 C10 12 10 5 15 0 C20 5 20 12 15 18 Z"/>
+                    </svg>
+                </div>
+            </div>
+            <p>Пам'ять славних воїнів російсько-української війни</p>
+        </main>
+        
+        <div class="grid" id="g"></div>
+    </div>
+
+    <!-- Модальне вікно -->
+    <div id="m">
+        <div class="box">
+            <button id="cl" aria-label="Закрити">×</button>
+            <div id="md-c"></div>
+        </div>
+    </div>
+
+    <!-- Фонова музика -->
+    <audio id="bg-music" loop src="music.mp3"></audio>
+
+    <!-- Головний Скрипт -->
+    <script type="module">
+        import { db } from './index.html'; 
+        import { doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const H = [
             {"id":"darii","name":"Дарій Дмитро Кузьмович","years":"25.10.1971 – 28.10.2018","rank":"Солдат","story":"Дмитро Кузьмович Дарій — справжній патріот, який став на захист України в найскладніші часи. Його мужність та відданість своїй землі навічно залишаться в пам'яті нашого народу."},
@@ -120,7 +165,6 @@
 
             const video = tile.querySelector('video');
 
-            // Play animation once when tile enters viewport
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
