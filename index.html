@@ -30,7 +30,7 @@
         .candle-svg { width: 35px; height: 55px; }
         .flame { fill: var(--accent); transform-origin: 50% 80%; animation: flicker 0.6s infinite alternate; }
         @keyframes flicker { 0% { transform: scale(0.95); opacity: 0.8; } 100% { transform: scale(1.05); opacity: 1; } }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 35px; padding: 0 20px 80px; max-width: 1200px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 35px; padding: 0 20px 80px; max-width: 1200px; margin: 0 auto; }
         .tile { position: relative; cursor: pointer; border-radius: 16px; overflow: hidden; background: var(--ph); border: 1px solid var(--line); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease; }
         .tile:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.5), 0 0 0 1px var(--accent); }
         .img-container { position: relative; aspect-ratio: 3/4; overflow: hidden; border-bottom: 1px solid var(--line); }
@@ -61,6 +61,25 @@
         #cl { align-self: flex-start; background: none; border: 0; font-size: 2.5rem; cursor: pointer; color: var(--muted); padding: 0; line-height: 1; transition: color 0.2s; }
         #cl:hover { color: var(--text); }
     </style>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
+            authDomain: "memoria-1341b.firebaseapp.com",
+            projectId: "memoria-1341b",
+            storageBucket: "memoria-1341b.firebasestorage.app",
+            messagingSenderId: "349496829155",
+            appId: "1:349496829155:web:1e3fa4a8bb531acaa811d6",
+            measurementId: "G-E5X9XE44QV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        export const db = getFirestore(app);
+    </script>
 </head>
 <body>
     <div class="wrap">
@@ -100,7 +119,10 @@
     <!-- Фонова музика -->
     <audio id="bg-music" loop src="music.mp3"></audio>
 
-    <script>
+    <script type="module">
+        import { db } from './index.html'; // Adjust path if needed or keep inline
+        import { doc, onSnapshot, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
         const H = [
             {"id":"darii","name":"Дарій Дмитро Кузьмович","years":"25.10.1971 – 28.10.2018","rank":"Солдат","story":"Дмитро Кузьмович Дарій — справжній патріот, який став на захист України в найскладніші часи. Його мужність та відданість своїй землі навічно залишаться в пам'яті нашого народу."},
             {"id":"rachmaiev","name":"Рахмаєв Юрій Олексійович","years":"","rank":"","story":"Інформація про Героя оновлюється."},
@@ -115,9 +137,6 @@
             {"id":"martsyniak","name":"Марциняк Олександр Михайлович","years":"","rank":"","story":"Інформація про Героя оновлюється."}
         ];
 
-        const candleCounts = {};
-        H.forEach(h => candleCounts[h.id] = 0);
-
         const grid = document.getElementById('g');
         const modal = document.getElementById('m');
         const modalContent = document.getElementById('md-c');
@@ -125,13 +144,6 @@
         const menuBtn = document.getElementById('menu-btn');
         const navMenu = document.getElementById('nav-menu');
         const bgMusic = document.getElementById('bg-music');
-
-        // Автозапуск музики після першого кліку на сторінці
-        const startMusic = () => {
-            bgMusic.play().catch(e => console.log("Музику заблоковано браузером до взаємодії"));
-            document.removeEventListener('click', startMusic);
-        };
-        document.addEventListener('click', startMusic);
 
         H.forEach(h => {
             const tile = document.createElement('div');
@@ -163,7 +175,6 @@
             };
 
             tile.onclick = () => {
-                // Притихання музики при відкритті вікна
                 bgMusic.volume = 0.2;
 
                 modalContent.innerHTML = `
@@ -182,7 +193,7 @@
                                     <path class="flame-icon" d="M12 2 C12 2, 7 8, 7 12 C7 16, 10 18, 12 18 C14 18, 17 16, 17 12 C17 8, 12 2, 12 2 Z" fill="#a09785"/>
                                     <path d="M11 19 L13 19 L13 22 L11 22 Z" fill="#555"/>
                                 </svg>
-                                Запалити свічку <span>(${candleCounts[h.id]})</span>
+                                Запалити свічку <span id="count-${h.id}">...</span>
                             </button>
                         </div>
                         <audio id="hero-audio" src="${h.id}-voice.mp3" autoplay></audio>
@@ -190,6 +201,19 @@
                 `;
                 
                 modal.classList.add('on');
+
+                // Real-time listener for candle count
+                const docRef = doc(db, "candles", h.id);
+                const unsubscribe = onSnapshot(docRef, (docSnap) => {
+                    const countSpan = document.getElementById(`count-${h.id}`);
+                    if (docSnap.exists()) {
+                        countSpan.textContent = `(${docSnap.data().count})`;
+                    } else {
+                        countSpan.textContent = `(0)`;
+                        // Create document if it doesn't exist
+                        updateDoc(docRef, { count: 0 }).catch(() => {});
+                    }
+                });
 
                 const heroAudio = document.getElementById('hero-audio');
                 const playBtn = document.getElementById('play-story');
@@ -214,22 +238,20 @@
                 };
 
                 candleBtn.onclick = () => {
-                    candleCounts[h.id]++;
-                    candleBtn.querySelector('span').textContent = `(${candleCounts[h.id]})`;
+                    updateDoc(docRef, { count: increment(1) });
                     candleBtn.classList.add('lit');
                 };
-            };
 
-            const closeModal = () => {
-                const heroAudio = document.getElementById('hero-audio');
-                if (heroAudio) heroAudio.pause();
-                // Повернення гучності музики при закритті
-                bgMusic.volume = 1.0;
-                modal.classList.remove('on');
-            };
+                const closeModal = () => {
+                    unsubscribe(); // Stop listening
+                    heroAudio.pause();
+                    bgMusic.volume = 1.0;
+                    modal.classList.remove('on');
+                };
 
-            closeBtn.onclick = closeModal;
-            modal.onclick = e => { if (e.target === modal) closeModal(); };
+                closeBtn.onclick = closeModal;
+                modal.onclick = e => { if (e.target === modal) closeModal(); };
+            };
 
             grid.appendChild(tile);
         });
