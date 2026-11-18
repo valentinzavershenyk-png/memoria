@@ -54,7 +54,9 @@
         button.act:hover { background: #e9ab4e; transform: translateY(-2px); }
         button.candle { background: var(--ph); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 14px 24px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; font-weight: 500; }
         button.candle:hover { background: #222; border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
-        button.candle svg { width: 20px; height: 20px; fill: currentColor; }
+        button.candle svg { width: 22px; height: 22px; }
+        button.candle .flame-icon { fill: var(--muted); transform-origin: 50% 80%; }
+        button.candle:hover .flame-icon, button.candle.lit .flame-icon { fill: var(--accent); animation: flicker 0.6s infinite alternate; }
         button.candle.lit { border-color: var(--accent); color: var(--accent); background: rgba(223, 158, 56, 0.1); }
         #cl { align-self: flex-start; background: none; border: 0; font-size: 2.5rem; cursor: pointer; color: var(--muted); padding: 0; line-height: 1; transition: color 0.2s; }
         #cl:hover { color: var(--text); }
@@ -165,10 +167,6 @@
                 modalContent.innerHTML = `
                     <div class="box-img-area">
                         <img src="${h.id}.jpg" alt="${h.name}">
-                        <button class="candle" id="light-candle">
-                            <svg viewBox="0 0 24 24"><path d="M12 2v6M12 18v4M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M16 12h6M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24"/></svg>
-                            Запалити свічку <span>(${candleCounts[h.id]})</span>
-                        </button>
                     </div>
                     <div class="info">
                         <h2>${h.name}</h2>
@@ -177,6 +175,13 @@
                         <div class="story">${h.story}</div>
                         <div class="controls">
                             <button class="act" id="play-story">⏸ Пауза</button>
+                            <button class="candle" id="light-candle">
+                                <svg class="candle-svg-btn" viewBox="0 0 24 24">
+                                    <path class="flame-icon" d="M12 2 C12 2, 7 8, 7 12 C7 16, 10 18, 12 18 C14 18, 17 16, 17 12 C17 8, 12 2, 12 2 Z" fill="#a09785"/>
+                                    <path d="M11 19 L13 19 L13 22 L11 22 Z" fill="#555"/>
+                                </svg>
+                                Запалити свічку <span>(${candleCounts[h.id]})</span>
+                            </button>
                         </div>
                         <audio id="hero-audio" src="${h.id}-voice.mp3" autoplay></audio>
                     </div>
