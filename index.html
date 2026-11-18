@@ -61,25 +61,6 @@
         #cl { align-self: flex-start; background: none; border: 0; font-size: 2.5rem; cursor: pointer; color: var(--muted); padding: 0; line-height: 1; transition: color 0.2s; }
         #cl:hover { color: var(--text); }
     </style>
-
-    <!-- Firebase SDK Scripts -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
-            authDomain: "memoria-1341b.firebaseapp.com",
-            projectId: "memoria-1341b",
-            storageBucket: "memoria-1341b.firebasestorage.app",
-            messagingSenderId: "349496829155",
-            appId: "1:349496829155:web:1e3fa4a8bb531acaa811d6",
-            measurementId: "G-E5X9XE44QV"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        export const db = getFirestore(app);
-    </script>
 </head>
 <body>
     <div class="wrap">
@@ -119,9 +100,23 @@
     <!-- Фонова музика -->
     <audio id="bg-music" loop src="music.mp3"></audio>
 
+    <!-- Головний Скрипт -->
     <script type="module">
-        import { db } from './index.html'; // Adjust path if needed or keep inline
-        import { doc, onSnapshot, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
+            authDomain: "memoria-1341b.firebaseapp.com",
+            projectId: "memoria-1341b",
+            storageBucket: "memoria-1341b.firebasestorage.app",
+            messagingSenderId: "349496829155",
+            appId: "1:349496829155:web:1e3fa4a8bb531acaa811d6",
+            measurementId: "G-E5X9XE44QV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         const H = [
             {"id":"darii","name":"Дарій Дмитро Кузьмович","years":"25.10.1971 – 28.10.2018","rank":"Солдат","story":"Дмитро Кузьмович Дарій — справжній патріот, який став на захист України в найскладніші часи. Його мужність та відданість своїй землі навічно залишаться в пам'яті нашого народу."},
@@ -202,7 +197,6 @@
                 
                 modal.classList.add('on');
 
-                // Real-time listener for candle count
                 const docRef = doc(db, "candles", h.id);
                 const unsubscribe = onSnapshot(docRef, (docSnap) => {
                     const countSpan = document.getElementById(`count-${h.id}`);
@@ -210,8 +204,7 @@
                         countSpan.textContent = `(${docSnap.data().count})`;
                     } else {
                         countSpan.textContent = `(0)`;
-                        // Create document if it doesn't exist
-                        updateDoc(docRef, { count: 0 }).catch(() => {});
+                        setDoc(docRef, { count: 0 }).catch(() => {});
                     }
                 });
 
@@ -243,7 +236,7 @@
                 };
 
                 const closeModal = () => {
-                    unsubscribe(); // Stop listening
+                    unsubscribe();
                     heroAudio.pause();
                     bgMusic.volume = 1.0;
                     modal.classList.remove('on');
