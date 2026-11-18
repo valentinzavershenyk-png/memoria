@@ -165,20 +165,21 @@
 
             const video = tile.querySelector('video');
 
-            // Налаштування для Intersection Observer (відтворення анімації при прокрутці)
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
-                threshold: 0.5 // Відео пускається, коли 50% картки видно на екрані
+                threshold: 0.5
             };
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         video.play();
+                        video.style.opacity = '1';
                     } else {
                         video.pause();
                         video.currentTime = 0;
+                        video.style.opacity = '0';
                     }
                 });
             }, observerOptions);
@@ -236,9 +237,11 @@
                     if (isStoryPlaying) {
                         heroAudio.pause();
                         playBtn.textContent = '▶ Прослухати історію';
+                        bgMusic.volume = 1.0;
                     } else {
                         heroAudio.play();
                         playBtn.textContent = '⏸ Пауза';
+                        bgMusic.volume = 0.2;
                     }
                     isStoryPlaying = !isStoryPlaying;
                 };
@@ -246,6 +249,7 @@
                 heroAudio.onended = () => {
                     playBtn.textContent = '▶ Прослухати історію';
                     isStoryPlaying = false;
+                    bgMusic.volume = 1.0;
                 };
 
                 candleBtn.onclick = () => {
