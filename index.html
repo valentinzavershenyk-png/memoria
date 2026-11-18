@@ -3,55 +3,37 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Memoria — меморіал Героям</title>
+    <title>Герої сучасності — меморіал Героям</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500&family=Manrope:wght@400;500&display=swap">
     <style>
-        :root {
-            --bg: #000000;
-            --ph: #26201A;
-            --line: #3A322A;
-            --text: #EDE6DA;
-            --muted: #BDB2A2;
-            --accent: #E0A458;
-            --serif: 'Lora', Georgia, serif;
-            --sans: 'Manrope', system-ui, sans-serif;
-        }
+        :root { --bg: #000000; --ph: #26201A; --line: #3A322A; --text: #EDE6DA; --muted: #BDB2A2; --accent: #E0A458; --serif: 'Lora', Georgia, serif; --sans: 'Manrope', system-ui, sans-serif; }
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 1rem; line-height: 1.6; }
         a { color: inherit; }
         :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
         .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
-        .muted { color: var(--muted); }
-
-        /* Header */
         .bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; position: relative; }
-        .logo { font-family: var(--serif); font-size: 1.5rem; text-decoration: none; }
-        .menu { width: 44px; height: 44px; background: none; border: 0; color: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .logo { font-family: var(--serif); font-size: 1.5rem; text-decoration: none; color: var(--accent); }
+        .menu { width: 44px; height: 44px; background: none; border: 0; color: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
         nav { display: none; position: absolute; top: 100%; left: -20px; right: -20px; background: var(--bg); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 8px 20px; z-index: 5; }
         nav.open { display: block; }
-        nav a { display: block; padding: 12px 0; text-decoration: none; color: var(--muted); }
+        nav a { display: block; padding: 12px 0; text-decoration: none; color: var(--muted); font-size: 1.1rem; }
         nav a:hover { color: var(--text); }
-
-        /* Hero */
         .hero { max-width: 880px; margin: 0 auto; padding: 40px 20px 48px; text-align: center; }
         .hero h1 { font-family: var(--serif); font-size: 2.5rem; color: var(--accent); margin: 0 0 16px; }
-
-        /* Grid */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; padding: 0 20px 60px; max-width: 1200px; margin: 0 auto; }
-        .tile { position: relative; cursor: pointer; border-radius: 12px; overflow: hidden; aspect-ratio: 3 / 4; background: var(--ph); border: 1px solid var(--line); transition: transform 0.3s ease; }
+        .tile { position: relative; cursor: pointer; border-radius: 12px; overflow: hidden; aspect-ratio: 3/4; background: var(--ph); border: 1px solid var(--line); transition: transform 0.3s ease; }
         .tile:hover { transform: translateY(-5px); }
         .tile img, .tile video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
         .tile video { opacity: 0; transition: opacity 0.4s ease; }
         .tile:hover video, .tile.live video { opacity: 1; }
-        .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 16px; background: linear-gradient(transparent, rgba(0,0,0,0.85)); }
+        .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 16px; background: linear-gradient(transparent, rgba(0, 0, 0, 0.85)); }
         .cap b { display: block; font-family: var(--sans); font-size: 1.1rem; color: var(--accent); }
         .cap small { display: block; font-size: 0.9rem; color: var(--muted); margin-top: 4px; }
-
-        /* Modal */
-        #m { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 200; backdrop-filter: blur(8px); }
+        #m { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 200; backdrop-filter: blur(8px); }
         #m.on { display: flex; }
         .box { background: var(--ph); max-width: 800px; width: 100%; border-radius: 16px; border: 1px solid var(--line); display: flex; gap: 30px; padding: 30px; flex-wrap: wrap; max-height: 90vh; overflow-y: auto; }
         .box img { width: 260px; max-width: 100%; border-radius: 8px; object-fit: cover; height: 350px; }
@@ -65,178 +47,42 @@
         button.act:hover { background: #E6B579; }
         button.g { background: var(--line); color: var(--text); border: 0; border-radius: 8px; padding: 12px 20px; cursor: pointer; transition: background 0.2s; }
         button.g:hover { background: #4D4338; }
-        button:disabled { opacity: 0.5; cursor: default; }
-        #cl { align-self: flex-start; }
-        .flame { font-size: 1.8rem; display: block; margin-top: 15px; }
-
-        /* Audio Controls */
-        #mus { position: fixed; right: 20px; bottom: 20px; z-index: 100; border-radius: 50%; width: 50px; height: 50px; padding: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        
-        @media (max-width: 600px) {
-            .box { padding: 20px; gap: 20px; }
-            .box img { height: auto; }
-        }
+        #cl { align-self: flex-start; background: none; border: 0; font-size: 2rem; cursor: pointer; color: var(--muted); }
     </style>
 </head>
 <body>
-
     <div class="wrap">
         <header class="bar">
-            <a href="#" class="logo">Memoria</a>
+            <a href="index.html" class="logo">Memoria</a>
             <button class="menu" id="menu-btn" aria-label="Меню">☰</button>
             <nav id="nav-menu">
-                <a href="#wwi">Перша світова війна</a>
-                <a href="#wwii">Друга світова війна</a>
-                <a href="#ukraine">Російсько-українська війна</a>
+                <a href="wwi.html">Перша світова війна</a>
+                <a href="wwii.html">Друга світова війна</a>
+                <a href="index.html">Герої сучасності</a>
             </nav>
         </header>
-
         <main class="hero">
-            <h1>Пам'ять Героїв села Суховерхів</h1>
-            <p>Вічна пам'ять і слава Героям України</p>
+            <h1>Герої сучасності</h1>
+            <p>Пам'ять славних воїнів російсько-української війни</p>
         </main>
-
         <div class="grid" id="g"></div>
     </div>
 
+    <!-- Модальне вікно -->
     <div id="m">
         <div class="box">
-            <img id="mi" alt="Герой">
-            <div class="info">
-                <h2 id="mn"></h2>
-                <p class="rank" id="mr"></p>
-                <p class="years" id="my"></p>
-                <div class="story" id="ms"></div>
-                <div class="controls">
-                    <button class="act" id="play">▶ Слухати історію</button>
-                    <button class="g" id="cand">🕯 Запалити свічку</button>
-                    <button class="g" id="cl">Закрити</button>
-                </div>
-                <div>
-                    <span class="flame" id="cf"></span>
-                    <span id="cc"></span>
-                </div>
-            </div>
+            <button id="cl" aria-label="Закрити">×</button>
+            <div id="md-c"></div>
         </div>
     </div>
 
-    <button class="g" id="mus" aria-label="Управління музикою">🔊</button>
-    <audio id="bg" src="music.mp3" loop></audio>
-    <audio id="vo"></audio>
-
+    <!-- Тут мають бути ваші скрипти -->
+    <script src="path/to/your/script.js"></script>
     <script>
-        const H = [
-            {"id": "darii", "name": "Дарій Дмитро Кузьмович", "years": "25.10.1971 – 28.10.2018", "rank": "Солдат", "story": "Дмитро Кузьмович Дарій — справжній патріот, який став на захист України в найскладніші часи. Його мужність та відданість своїй землі навічно залишаться в пам'яті нашого народу."},
-            {"id": "nezviskyi", "name": "Незвиський Микола Васильович", "years": "18.12.1979 – 19.12.2024", "rank": "Сержант", "story": "Незвиський Микола Васильович — захисник України, сержант Збройних Сил України, житель села Суховерхів. Народився 18 грудня 1979 року. Загинув 19 грудня 2024 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id": "melnychuk", "name": "Мельничук Мирослав Михайлович", "years": "25.08.1992 – 29.09.2025", "rank": "", "story": "Мельничук Мирослав Михайлович — захисник України, житель села Суховерхів. Народився 25 серпня 1992 року. Загинув 29 вересня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id": "heshko", "name": "Гешко Михайло Іванович", "years": "21.11.1995 – 14.02.2026", "rank": "", "story": "Гешко Михайло Іванович — захисник України, житель села Суховерхів. Народився 21 листопада 1995 року. Загинув 14 лютого 2026 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id": "pidhoretskyi", "name": "Підгорецький Михайло Вікторович", "years": "05.03.1985 – 27.01.2025", "rank": "Солдат", "story": "Підгорецький Михайло Вікторович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 5 березня 1985 року. Загинув 27 січня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id": "sukhar", "name": "Сухарь Григорій Васильович", "years": "09.02.1980 – 10.04.2023", "rank": "Солдат", "story": "Сухарь Григорій Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 9 лютого 1980 року. Загинув 10 квітня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id": "larionov", "name": "Ларіонов Олександр Васильович", "years": "28.02.1984 – 29.08.2023", "rank": "Старший сержант, командир відділення", "story": "Ларіонов Олександр Васильович — захисник України, старший сержант, командир відділення Збройних Сил України, житель села Суховерхів. Народився 28 лютого 1984 року. Загинув 29 серпня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id": "romanko", "name": "Романко Роман Васильович", "years": "28.01.1975 – 17.04.2025", "rank": "Солдат", "story": "Романко Роман Васильович — захисників України, солдат Збройних Сил України, житель села Суховерхів. Народився 28 січня 1975 року. Загинув 17 квітня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id": "unhurian", "name": "Унгурян Олександр Васильович", "years": "09.08.1987 – 22.03.2023", "rank": "Старший солдат", "story": "Унгурян Олександр Васильович — захи스ник України, старший солдат Збройних Сил України, житель села Суховерхів. Народився 9 серпня 1987 року. Загинув 22 березня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"}
-        ];
-
-        const g = document.getElementById('g'), bg = document.getElementById('bg'), vo = document.getElementById('vo');
-        bg.volume = 0.3;
-        let musicOn = true, started = false, cur = null;
-
         const menuBtn = document.getElementById('menu-btn');
         const navMenu = document.getElementById('nav-menu');
         menuBtn.onclick = () => navMenu.classList.toggle('open');
         window.onclick = e => { if (!menuBtn.contains(e.target) && !navMenu.contains(e.target)) navMenu.classList.remove('open'); };
-
-        function startMusic() {
-            if (!started && musicOn) {
-                bg.play().catch(() => {});
-                started = true;
-            }
-        }
-
-        document.addEventListener('pointerdown', startMusic, {once: false});
-        bg.play().then(() => started = true).catch(() => {});
-
-        document.getElementById('mus').onclick = e => {
-            e.stopPropagation();
-            musicOn = !musicOn;
-            started = true;
-            musicOn ? bg.play() : bg.pause();
-            e.target.textContent = musicOn ? '🔊' : '🔇';
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const v = entry.target.querySelector('video');
-                if (entry.isIntersecting) {
-                    entry.target.dataset.timer = setTimeout(() => {
-                        v.currentTime = 0;
-                        v.play().catch(() => {});
-                    }, 1000);
-                } else {
-                    clearTimeout(entry.target.dataset.timer);
-                    v.pause();
-                }
-            });
-        }, { threshold: 0.7 });
-
-        H.forEach(h => {
-            const t = document.createElement('div');
-            t.className = 'tile';
-            t.innerHTML = `<img src="${h.id}.jpg" alt="${h.name}"><video src="${h.id}-wave.webm" muted loop playsinline preload="auto"></video><div class="cap"><b>${h.name}</b><small>${h.years}</small></div>`;
-            
-            const v = t.querySelector('video');
-
-            t.onmouseenter = () => {
-                clearTimeout(t.dataset.timer);
-                v.currentTime = 0;
-                v.play().catch(() => {});
-            };
-            t.onmouseleave = () => {
-                v.pause();
-            };
-
-            t.onclick = () => open_(h);
-
-            g.appendChild(t);
-            observer.observe(t);
-        });
-
-        const K = id => 'candle-' + id;
-
-        function upd() {
-            const n = localStorage.getItem(K(cur.id)) ? 1 : 0;
-            document.getElementById('cf').textContent = n ? '🕯' : '';
-            document.getElementById('cc').textContent = 'Запалено свічок на цьому пристрої: ' + n;
-            document.getElementById('cand').disabled = !!n;
-            document.getElementById('cand').textContent = n ? '🕯 Свічку запалено' : '🕯 Запалити свічку';
-        }
-
-        function open_(h) {
-            cur = h;
-            document.getElementById('mi').src = `${h.id}.jpg`;
-            document.getElementById('mn').textContent = h.name;
-            document.getElementById('mr').textContent = `${h.rank}, с. Суховерхів`;
-            document.getElementById('my').textContent = h.years;
-            document.getElementById('ms').textContent = h.story;
-            upd();
-            document.getElementById('m').classList.add('on');
-            speak();
-        }
-
-        document.getElementById('cl').onclick = () => {
-            document.getElementById('m').classList.remove('on');
-            vo.pause();
-        };
-
-        document.getElementById('cand').onclick = () => {
-            localStorage.setItem(K(cur.id), 1);
-            upd();
-        };
-
-        function speak() {
-            vo.src = `${cur.id}-voice.mp3`;
-            vo.play().catch(() => {});
-        }
     </script>
 </body>
 </html>
