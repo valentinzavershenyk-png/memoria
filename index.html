@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Герої сучасності — Меморіал</title>
+    <title>Герої сучасності — меморіал Героям</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500&family=Manrope:wght@400;500&display=swap">
@@ -49,8 +49,6 @@
         button.candle { background: var(--line); color: var(--text); border: 0; border-radius: 8px; padding: 12px 20px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 8px; }
         button.candle:hover { background: #4D4338; }
         #cl { align-self: flex-start; background: none; border: 0; font-size: 2rem; cursor: pointer; color: var(--muted); padding: 0; }
-        .music-control { position: fixed; bottom: 20px; right: 20px; z-index: 100; }
-        button.music-btn { background: var(--accent); color: #000; border: 0; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
@@ -60,7 +58,6 @@
             <button class="menu" id="menu-btn" aria-label="Меню">☰</button>
             <nav id="nav-menu">
                 <a href="wwi.html">Перша світова війна</a>
-                <a href="wwii.html">Друга світова війна</a>
                 <a href="index.html">Герої сучасності</a>
             </nav>
         </header>
@@ -80,10 +77,7 @@
     </div>
 
     <!-- Фонова музика -->
-    <div class="music-control">
-        <button class="music-btn" id="music-btn" aria-label="Управління музикою">🎵</button>
-        <audio id="bg-music" loop src="background-music.mp3"></audio>
-    </div>
+    <audio id="bg-music" loop src="background-music.mp3"></audio>
 
     <script>
         const H = [
@@ -98,9 +92,8 @@
             {"id":"unhurian","name":"Унгурян Олександр Васильович","years":"09.08.1987 – 22.03.2023","rank":"Старший солдат","story":"Унгурян Олександр Васильович — захисник України, старший солдат Збройних Сил України, житель села Суховерхів. Народився 9 серпня 1987 року. Загинув 22 березня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"}
         ];
 
-        // Імітація лічильника свічок (у реальному проекті потрібен бекенд)
         const candleCounts = {};
-        H.forEach(h => candleCounts[h.id] = Math.floor(Math.random() * 150) + 20);
+        H.forEach(h => candleCounts[h.id] = 0);
 
         const grid = document.getElementById('g');
         const modal = document.getElementById('m');
@@ -109,20 +102,13 @@
         const menuBtn = document.getElementById('menu-btn');
         const navMenu = document.getElementById('nav-menu');
         const bgMusic = document.getElementById('bg-music');
-        const musicBtn = document.getElementById('music-btn');
 
-        let isPlaying = false;
-
-        musicBtn.onclick = () => {
-            if (isPlaying) {
-                bgMusic.pause();
-                musicBtn.textContent = '🎵';
-            } else {
-                bgMusic.play();
-                musicBtn.textContent = '⏸️';
-            }
-            isPlaying = !isPlaying;
+        // Автозапуск музики після першого кліку на сторінці
+        const startMusic = () => {
+            bgMusic.play().catch(e => console.log("Музику заблоковано браузером до взаємодії"));
+            document.removeEventListener('click', startMusic);
         };
+        document.addEventListener('click', startMusic);
 
         H.forEach(h => {
             const tile = document.createElement('div');
@@ -164,10 +150,10 @@
                         <div class="years">${h.years}</div>
                         <div class="story">${h.story}</div>
                         <div class="controls">
-                            <button class="act" id="play-story">▶ Прослухати історію</button>
+                            <button class="act" id="play-story">⏸️ Пауза</button>
                             <button class="candle" id="light-candle">🕯️ Запалити свічку <span>(${candleCounts[h.id]})</span></button>
                         </div>
-                        <audio id="hero-audio" src="${h.id}-voice.mp3"></audio>
+                        <audio id="hero-audio" src="${h.id}-voice.mp3" autoplay></audio>
                     </div>
                 `;
                 
@@ -177,7 +163,7 @@
                 const playBtn = document.getElementById('play-story');
                 const candleBtn = document.getElementById('light-candle');
 
-                let isStoryPlaying = false;
+                let isStoryPlaying = true;
 
                 playBtn.onclick = () => {
                     if (isStoryPlaying) {
@@ -198,15 +184,26 @@
                 candleBtn.onclick = () => {
                     candleCounts[h.id]++;
                     candleBtn.querySelector('span').textContent = `(${candleCounts[h.id]})`;
-                    candleBtn.style.borderColor = 'var(--accent)';
                 };
             };
 
             grid.appendChild(tile);
         });
 
-        closeBtn.onclick = () => modal.classList.remove('on');
-        modal.onclick = e => { if (e.target === modal) modal.classList.remove('on'); };
+        closeBtn.onclick = () => {
+            const heroAudio = document.getElementById('hero-audio');
+            if (heroAudio) heroAudio.pause();
+            modal.classList.remove('on');
+        };
+        
+        modal.onclick = e => {
+            if (e.target === modal) {
+                const heroAudio = document.getElementById('hero-audio');
+                if (heroAudio) heroAudio.pause();
+                modal.classList.remove('on');
+            }
+        };
+        
         menuBtn.onclick = () => navMenu.classList.toggle('open');
         window.onclick = e => { if (!menuBtn.contains(e.target) && !navMenu.contains(e.target)) navMenu.classList.remove('open'); };
     </script>
