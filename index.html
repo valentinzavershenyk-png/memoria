@@ -62,24 +62,6 @@
         #cl:hover { color: var(--text); }
         @media (max-width: 768px) { .box { flex-direction: column; align-items: center; } .box-img-area { width: 100%; max-width: 300px; } }
     </style>
-    <!-- Firebase SDK Scripts -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
-            authDomain: "memoria-1341b.firebaseapp.com",
-            projectId: "memoria-1341b",
-            storageBucket: "memoria-1341b.firebasestorage.app",
-            messagingSenderId: "349496829155",
-            appId: "1:349496829155:web:1e3fa4a8bb531acaa811d6",
-            measurementId: "G-E5X9XE44QV"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        export const db = getFirestore(app);
-    </script>
 </head>
 <body>
     <div class="wrap">
@@ -122,8 +104,21 @@
 
     <!-- Головний Скрипт -->
     <script type="module">
-        import { db } from './index.html'; 
-        import { doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQtpwR_6ZRheTYe1RK-famOI_zZnaYTZY",
+            authDomain: "memoria-1341b.firebaseapp.com",
+            projectId: "memoria-1341b",
+            storageBucket: "memoria-1341b.firebasestorage.app",
+            messagingSenderId: "349496829155",
+            appId: "1:349496829155:web:1e3fa4a8bb531acaa811d6",
+            measurementId: "G-E5X9XE44QV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         const H = [
             {"id":"darii","name":"Дарій Дмитро Кузьмович","years":"25.10.1971 – 28.10.2018","rank":"Солдат","story":"Дмитро Кузьмович Дарій — справжній патріот, який став на захист України в найскладніші часи. Його мужність та відданість своїй землі навічно залишаться в пам'яті нашого народу."},
@@ -195,7 +190,7 @@
                             <svg class="candle-svg-btn" viewBox="0 0 24 24">
                                 <path class="flame-icon" d="M12 2 C12 2, 7 8, 7 12 C7 16, 10 18, 12 18 C14 18, 17 16, 17 12 C17 8, 12 2, 12 2 Z" fill="#a09785"/>
                                 <path d="M11 19 L13 19 L13 22 L11 22 Z" fill="#555"/>
-                            </svg>
+                                </svg>
                             Запалити свічку <span id="count-${h.id}">...</span>
                         </button>
                     </div>
@@ -270,6 +265,7 @@
             grid.appendChild(tile);
         });
 
+        // Autoplay music on user click
         const startMusic = () => {
             bgMusic.play().catch(e => console.log("Музику заблоковано до першого кліку"));
             document.removeEventListener('click', startMusic);
