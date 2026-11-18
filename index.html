@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Герої сучасності — меморіал Героям</title>
+    <title>Герої сучасності — Меморіал</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500&family=Manrope:wght@400;500&display=swap">
@@ -24,15 +24,16 @@
         nav a:hover { color: var(--text); }
         .hero { max-width: 880px; margin: 0 auto; padding: 40px 20px 48px; text-align: center; }
         .hero h1 { font-family: var(--serif); font-size: 2.5rem; color: var(--accent); margin: 0 0 16px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; padding: 0 20px 60px; max-width: 1200px; margin: 0 auto; }
-        .tile { position: relative; cursor: pointer; border-radius: 12px; overflow: hidden; aspect-ratio: 3/4; background: var(--ph); border: 1px solid var(--line); transition: transform 0.3s ease; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 40px; padding: 0 20px 60px; max-width: 1200px; margin: 0 auto; }
+        .tile { position: relative; cursor: pointer; border-radius: 12px; overflow: hidden; background: transparent; transition: transform 0.3s ease; }
         .tile:hover { transform: translateY(-5px); }
+        .img-container { position: relative; aspect-ratio: 3/4; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
         .tile img, .tile video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
         .tile video { opacity: 0; transition: opacity 0.4s ease; }
         .tile:hover video { opacity: 1; }
-        .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 16px; background: linear-gradient(transparent, rgba(0, 0, 0, 0.85)); }
-        .cap b { display: block; font-family: var(--sans); font-size: 1.1rem; color: var(--accent); }
-        .cap small { display: block; font-size: 0.9rem; color: var(--muted); margin-top: 4px; }
+        .info-card { margin-top: 16px; text-align: center; }
+        .name { display: block; font-family: var(--sans); font-size: 1.1rem; color: var(--text); font-weight: 500; }
+        .years { display: block; font-size: 0.9rem; color: var(--muted); margin-top: 4px; }
         #m { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 200; backdrop-filter: blur(8px); }
         #m.on { display: flex; }
         .box { background: var(--ph); max-width: 800px; width: 100%; border-radius: 16px; border: 1px solid var(--line); display: flex; gap: 30px; padding: 30px; flex-wrap: wrap; max-height: 90vh; overflow-y: auto; }
@@ -40,14 +41,16 @@
         .info { flex: 1; min-width: 250px; display: flex; flex-direction: column; }
         .info h2 { font-family: var(--serif); color: var(--accent); margin: 0 0 10px; font-size: 1.8rem; }
         .info .rank { font-weight: 500; color: var(--accent); }
-        .info .years { color: var(--muted); margin: 4px 0 16px; }
+        .info .years { color: var(--muted); margin: 4px 0 16px; font-size: 1rem; }
         .info .story { line-height: 1.7; opacity: 0.95; }
-        .controls { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; padding-top: 20px; }
+        .controls { display: flex; gap: 15px; flex-wrap: wrap; margin-top: auto; padding-top: 20px; align-items: center; }
         button.act { font-family: var(--sans); background: var(--accent); color: #000; border: 0; border-radius: 8px; padding: 12px 20px; font-size: 1rem; cursor: pointer; transition: background 0.2s; font-weight: 500; }
-         button.act:hover { background: #E6B579; }
-        button.g { background: var(--line); color: var(--text); border: 0; border-radius: 8px; padding: 12px 20px; cursor: pointer; transition: background 0.2s; }
-        button.g:hover { background: #4D4338; }
-        #cl { align-self: flex-start; background: none; border: 0; font-size: 2rem; cursor: pointer; color: var(--muted); }
+        button.act:hover { background: #E6B579; }
+        button.candle { background: var(--line); color: var(--text); border: 0; border-radius: 8px; padding: 12px 20px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 8px; }
+        button.candle:hover { background: #4D4338; }
+        #cl { align-self: flex-start; background: none; border: 0; font-size: 2rem; cursor: pointer; color: var(--muted); padding: 0; }
+        .music-control { position: fixed; bottom: 20px; right: 20px; z-index: 100; }
+        button.music-btn { background: var(--accent); color: #000; border: 0; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
@@ -76,18 +79,28 @@
         </div>
     </div>
 
+    <!-- Фонова музика -->
+    <div class="music-control">
+        <button class="music-btn" id="music-btn" aria-label="Управління музикою">🎵</button>
+        <audio id="bg-music" loop src="background-music.mp3"></audio>
+    </div>
+
     <script>
         const H = [
-            {"id":"darii","name":"Дарій Дмитро Кузьмович","years":"25.10.1971 – 28.10.2018","rank":"Солдат","village":"с. Суховерхів","story":"Дмитро Кузьмович Дарій — справжній патріот, який став на захист України в найскладніші часи. Його мужність та відданість своїй землі навічно залишаться в пам'яті нашого народу."},
-            {"id":"nezviskyi","name":"Незвиський Микола Васильович","years":"18.12.1979 – 19.12.2024","rank":"Сержант","village":"с. Суховерхів","story":"Незвиський Микола Васильович — захисник України, сержант Збройних Сил України, житель села Суховерхів. Народився 18 грудня 1979 року. Загинув 19 грудня 2024 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id":"melnychuk","name":"Мельничук Мирослав Михайлович","years":"25.08.1992 – 29.09.2025","rank":"","village":"с. Суховерхів","story":"Мельничук Мирослав Михайлович — захисник України, житель села Суховерхів. Народився 25 серпня 1992 року. Загинув 29 вересня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id":"heshko","name":"Гешко Михайло Іванович","years":"21.11.1995 – 14.02.2026","rank":"","village":"с. Суховерхів","story":"Гешко Михайло Іванович — захисник України, житель села Суховерхів. Народився 21 листопада 1995 року. Загинув 14 лютого 2026 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id":"pidhoretskyi","name":"Підгорецький Михайло Вікторович","years":"05.03.1985 – 27.01.2025","rank":"Солдат","village":"с. Суховерхів","story":"Підгорецький Михайло Вікторович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 5 березня 1985 року. Загинув 27 січня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id":"sukhar","name":"Сухарь Григорій Васильович","years":"09.02.1980 – 10.04.2023","rank":"Солдат","village":"с. Суховерхів","story":"Сухарь Григорій Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 9 лютого 1980 року. Загинув 10 квітня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id":"larionov","name":"Ларіонов Олександр Васильович","years":"28.02.1984 – 29.08.2023","rank":"Старший сержант, командир відділення","village":"с. Суховерхів","story":"Ларіонов Олександр Васильович — захисник України, старший сержант, командир відділення Збройних Сил України, житель села Суховерхів. Народився 28 лютого 1984 року. Загинув 29 серпня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id":"romanko","name":"Романко Роман Васильович","years":"28.01.1975 – 17.04.2025","rank":"Солдат","village":"с. Суховерхів","story":"Романко Роман Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 28 січня 1975 року. Загинув 17 квітня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
-            {"id":"unhurian","name":"Унгурян Олександр Васильович","years":"09.08.1987 – 22.03.2023","rank":"Старший солдат","village":"с. Суховерхів","story":"Унгурян Олександр Васильович — захисник України, старший солдат Збройних Сил України, житель села Суховерхів. Народився 9 серпня 1987 року. Загинув 22 березня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"}
+            {"id":"darii","name":"Дарій Дмитро Кузьмович","years":"25.10.1971 – 28.10.2018","rank":"Солдат","story":"Дмитро Кузьмович Дарій — справжній патріот, який став на захист України в найскладніші часи. Його мужність та відданість своїй землі навічно залишаться в пам'яті нашого народу."},
+            {"id":"nezviskyi","name":"Незвиський Микола Васильович","years":"18.12.1979 – 19.12.2024","rank":"Сержант","story":"Незвиський Микола Васильович — захисник України, сержант Збройних Сил України, житель села Суховерхів. Народився 18 грудня 1979 року. Загинув 19 грудня 2024 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
+            {"id":"melnychuk","name":"Мельничук Мирослав Михайлович","years":"25.08.1992 – 29.09.2025","rank":"","story":"Мельничук Мирослав Михайлович — захисник України, житель села Суховерхів. Народився 25 серпня 1992 року. Загинув 29 вересня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
+            {"id":"heshko","name":"Гешко Михайло Іванович","years":"21.11.1995 – 14.02.2026","rank":"","story":"Гешко Михайло Іванович — захисник України, житель села Суховерхів. Народився 21 листопада 1995 року. Загинув 14 лютого 2026 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
+            {"id":"pidhoretskyi","name":"Підгорецький Михайло Вікторович","years":"05.03.1985 – 27.01.2025","rank":"Солдат","story":"Підгорецький Михайло Вікторович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 5 березня 1985 року. Загинув 27 січня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
+            {"id":"sukhar","name":"Сухарь Григорій Васильович","years":"09.02.1980 – 10.04.2023","rank":"Солдат","story":"Сухарь Григорій Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 9 лютого 1980 року. Загинув 10 квітня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
+            {"id":"larionov","name":"Ларіонов Олександр Васильович","years":"28.02.1984 – 29.08.2023","rank":"Старший сержант, командир відділення","story":"Ларіонов Олександр Васильович — захисник України, старший сержант, командир відділення Збройних Сил України, житель села Суховерхів. Народився 28 лютого 1984 року. Загинув 29 серпня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
+            {"id":"romanko","name":"Романко Роман Васильович","years":"28.01.1975 – 17.04.2025","rank":"Солдат","story":"Романко Роман Васильович — захисник України, солдат Збройних Сил України, житель села Суховерхів. Народився 28 січня 1975 року. Загинув 17 квітня 2025 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"},
+            {"id":"unhurian","name":"Унгурян Олександр Васильович","years":"09.08.1987 – 22.03.2023","rank":"Старший солдат","story":"Унгурян Олександр Васильович — захисник України, старший солдат Збройних Сил України, житель села Суховерхів. Народився 9 серпня 1987 року. Загинув 22 березня 2023 року, захищаючи Україну від російського агресора. Вічна пам'ять і слава Герою!"}
         ];
+
+        // Імітація лічильника свічок (у реальному проекті потрібен бекенд)
+        const candleCounts = {};
+        H.forEach(h => candleCounts[h.id] = Math.floor(Math.random() * 150) + 20);
 
         const grid = document.getElementById('g');
         const modal = document.getElementById('m');
@@ -95,18 +108,35 @@
         const closeBtn = document.getElementById('cl');
         const menuBtn = document.getElementById('menu-btn');
         const navMenu = document.getElementById('nav-menu');
+        const bgMusic = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-btn');
+
+        let isPlaying = false;
+
+        musicBtn.onclick = () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicBtn.textContent = '🎵';
+            } else {
+                bgMusic.play();
+                musicBtn.textContent = '⏸️';
+            }
+            isPlaying = !isPlaying;
+        };
 
         H.forEach(h => {
             const tile = document.createElement('div');
             tile.className = 'tile';
             tile.innerHTML = `
-                <img src="${h.id}.jpg" alt="${h.name}">
-                <video loop muted playsinline>
-                    <source src="${h.id}-wave.webm" type="video/webm">
-                </video>
-                <div class="cap">
-                    <b>${h.name}</b>
-                    <small>${h.years}</small>
+                <div class="img-container">
+                    <img src="${h.id}.jpg" alt="${h.name}">
+                    <video loop muted playsinline>
+                        <source src="${h.id}-wave.webm" type="video/webm">
+                    </video>
+                </div>
+                <div class="info-card">
+                    <b class="name">${h.name}</b>
+                    <small class="years">${h.years}</small>
                 </div>
             `;
 
@@ -117,11 +147,10 @@
                 vid.currentTime = 0;
             };
 
-            // Для мобільних пристроїв — відтворення при торканні
             tile.ontouchstart = () => {
                 const vid = tile.querySelector('video');
                 vid.play();
-                setTimeout(() => { vid.pause(); vid.currentTime = 0; }, 3000); // грає 3 секунди
+                setTimeout(() => { vid.pause(); vid.currentTime = 0; }, 3000);
             };
 
             tile.onclick = () => {
@@ -135,11 +164,42 @@
                         <div class="years">${h.years}</div>
                         <div class="story">${h.story}</div>
                         <div class="controls">
-                            <audio controls src="${h.id}-voice.mp3"></audio>
+                            <button class="act" id="play-story">▶ Прослухати історію</button>
+                            <button class="candle" id="light-candle">🕯️ Запалити свічку <span>(${candleCounts[h.id]})</span></button>
                         </div>
+                        <audio id="hero-audio" src="${h.id}-voice.mp3"></audio>
                     </div>
                 `;
+                
                 modal.classList.add('on');
+
+                const heroAudio = document.getElementById('hero-audio');
+                const playBtn = document.getElementById('play-story');
+                const candleBtn = document.getElementById('light-candle');
+
+                let isStoryPlaying = false;
+
+                playBtn.onclick = () => {
+                    if (isStoryPlaying) {
+                        heroAudio.pause();
+                        playBtn.textContent = '▶ Прослухати історію';
+                    } else {
+                        heroAudio.play();
+                        playBtn.textContent = '⏸️ Пауза';
+                    }
+                    isStoryPlaying = !isStoryPlaying;
+                };
+
+                heroAudio.onended = () => {
+                    playBtn.textContent = '▶ Прослухати історію';
+                    isStoryPlaying = false;
+                };
+
+                candleBtn.onclick = () => {
+                    candleCounts[h.id]++;
+                    candleBtn.querySelector('span').textContent = `(${candleCounts[h.id]})`;
+                    candleBtn.style.borderColor = 'var(--accent)';
+                };
             };
 
             grid.appendChild(tile);
